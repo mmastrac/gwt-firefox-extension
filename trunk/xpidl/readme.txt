@@ -1,0 +1,1 @@
+The IDL pulled from XULRunner is tar-bzip'd in idl.tar.bz2.  There are a few issues with the IDL that are patched with local files.

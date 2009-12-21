@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xul-overlay href="dotSpotsOverlayGeneral.xul"?>
+<?xml-stylesheet href="chrome://dotspots/skin/dotSpots.css"?>
+
+<overlay id="dotspots"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+
+	<script type="application/x-javascript">
+		Components.classes["@com.dotspots/singleton;1"].getService();
+	</script>
+	
+</overlay>

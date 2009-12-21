@@ -1,0 +1,48 @@
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIChannelSecurityInfo {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIDocument {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsILayoutHistoryState {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIPresShell {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIScriptElement {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIScriptContext {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIScriptGlobalObject {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIUnicodeEncoder {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIUnicodeDecoder {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsIWordBreaker {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsObjectFrame {
+};
+
+[scriptable, uuid(00000000-0000-0000-0000-000000000000)]
+interface nsPresContext {
+};
+
