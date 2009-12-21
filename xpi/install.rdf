@@ -1,0 +1,52 @@
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+	<Description about="urn:mozilla:install-manifest">
+		<em:id>mozillabutton@dotspots.com</em:id>
+		<em:name>DotSpots@SUFFIX@</em:name>
+		<em:version>@VERSION@</em:version>
+		<em:description>Enables the DotSpots engine, allowing users to create and view dots on any page. (@DATE@@SUFFIX@)</em:description>
+		<em:creator>DotSpots</em:creator>
+		<em:homepageURL>http://@SITE@/</em:homepageURL>
+		<em:iconURL>chrome://dotspots/skin/addon.png</em:iconURL>
+		<em:aboutURL>http://@SITE@/</em:aboutURL>
+		<em:optionsURL>http://@SITE@/#settings</em:optionsURL>
+		<em:type>2</em:type>
+		<em:updateURL><![CDATA[@XPIUPDATEROOT@/update.rdf?guid=%ITEM_ID%&version=%ITEM_VERSION%&application=%APP_ID%&appversion=%APP_VERSION%]]></em:updateURL>
+		
+		<em:file>
+			<Description
+				about="urn:mozilla:extension:dotspots">
+				<em:package>content/dotspots/</em:package>
+				<em:skin>skin/classic/dotspots/</em:skin>
+			</Description>
+		</em:file>
+
+		<!-- Firefox -->
+		<em:targetApplication>
+			<Description>
+				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+				<em:minVersion>2.0</em:minVersion>
+				<em:maxVersion>4.0</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+
+		<!-- Flock -->
+		<em:targetApplication>
+			<Description>
+				<em:id>{a463f10c-3994-11da-9945-000d60ca027b}</em:id>
+				<em:minVersion>0.7</em:minVersion>
+				<em:maxVersion>1.0</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+
+		<!-- Fennec -->
+		<em:targetApplication>
+			<Description>
+				<em:id>{a23983c0-fd0e-11dc-95ff-0800200c9a66}</em:id>
+				<em:minVersion>0.1</em:minVersion>
+				<em:maxVersion>1.0.*</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+	</Description>
+
+</RDF>
