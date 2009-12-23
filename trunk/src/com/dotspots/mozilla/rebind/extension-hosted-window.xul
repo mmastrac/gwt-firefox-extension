@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window title="GWT Hosted Mode" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<label style="font: 10pt arial; padding: 1em;">Running extension in hosted mode.  Please do not close this window.</label>
+
+	<browser flex="1" type="content" src="http://localhost:8888/@moduleName/extension-hosted.html" />
+</window>
