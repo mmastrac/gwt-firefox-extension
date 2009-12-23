@@ -11,11 +11,11 @@ public final class Components {
 		protected Utils() {
 		}
 
-		public native void reportError(String error) /*-{
+		public static native void reportError(String error) /*-{
 			this.reportError(error);
 		}-*/;
 
-		public native void reportError(JavaScriptException e) /*-{
+		public static native void reportError(JavaScriptException e) /*-{
 			this.reportError(e.@com.google.gwt.core.client.JavaScriptException::getException()());
 		}-*/;
 	}

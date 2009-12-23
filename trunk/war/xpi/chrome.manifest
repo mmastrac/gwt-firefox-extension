@@ -1,22 +1,22 @@
-content 	dotspots 					jar:content.jar!/chrome/content/
-content 	dotspots 					jar:content.jar!/chrome/content/ contentaccessible=yes
+content 	com.dotspots.Example 					jar:content.jar!/chrome/content/
+content 	com.dotspots.Example 					jar:content.jar!/chrome/content/ contentaccessible=yes
 
-skin   		dotspots	classic/1.0     jar:content.jar!/chrome/skin/classic/
-locale      dotspots 	en-US 			jar:content.jar!/chrome/locale/en-US/
+skin   		com.dotspots.Example	classic/1.0     jar:content.jar!/chrome/skin/classic/
+locale      com.dotspots.Example 	en-US 			jar:content.jar!/chrome/locale/en-US/
 
-style 		chrome://global/content/customizeToolbar.xul chrome://@UUID@/skin/style.css
+style 		chrome://global/content/customizeToolbar.xul chrome://com.dotspots.Example/skin/style.css
 
 # Firefox
-overlay 	chrome://browser/content/browser.xul chrome://@UUID@/content/dotSpotsOverlay.xul
+overlay 	chrome://browser/content/browser.xul chrome://com.dotspots.Example/content/overlay.xul
 
 # Thunderbird mail
-#overlay	chrome://messenger/content/messenger.xul chrome://@UUID@/content/dotSpotsOverlay.xul
+#overlay	chrome://messenger/content/messenger.xul chrome://com.dotspots.Example/content/overlay.xul
 
 # Thunderbird compose
-#overlay	chrome://messenger/content/messengercompose/messengercompose.xul chrome://@UUID@/content/dotSpotsOverlay.xul
+#overlay	chrome://messenger/content/messengercompose/messengercompose.xul chrome://com.dotspots.Example/content/overlay.xul
 
 # Thunderbird address book
-#overlay	chrome://messenger/content/addressbook/addressbook.xul chrome://@UUID@/content/dotSpotsOverlay.xul
+#overlay	chrome://messenger/content/addressbook/addressbook.xul chrome://com.dotspots.Example/content/overlay.xul
 
 # Sunbird
-#overlay	chrome://calendar/content/calendar.xul chrome://@UUID@/content/dotSpotsOverlay.xul
+#overlay	chrome://calendar/content/calendar.xul chrome://com.dotspots.Example/content/overlay.xul

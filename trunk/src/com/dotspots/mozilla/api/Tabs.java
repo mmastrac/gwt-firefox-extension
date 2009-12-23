@@ -28,7 +28,7 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 	private final nsIWindowMediator windowMediator;
 
 	public Tabs() {
-		this.windowMediator = nsIWindowMediator.createInstance(WINDOW_MEDIATOR);
+		this.windowMediator = nsIWindowMediator.getService(WINDOW_MEDIATOR);
 		windowMediator.addListener(nsIWindowMediatorListener.wrap(this));
 
 		for (ChromeWindow window : new InternalSimpleIteratorWrapper<ChromeWindow>(windowMediator.getEnumerator(BROWSER_WINDOW))) {
