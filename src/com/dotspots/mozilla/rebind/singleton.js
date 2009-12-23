@@ -44,13 +44,13 @@ function Singleton() {
 		    alert: reportError,
 		    
 		    __gwt_module: "@moduleName",
-		    __gwt_base: "chrome://@guid/content/"
+		    __gwt_base: "chrome://@moduleName/content/"
 		};
 		
 		globalObject.window = globalObject;
 
         var loader = Components.classes[CID_JS_SUBSCRIPT_LOADER].getService(mozIJSSubScriptLoader);
-        loader.loadSubScript("chrome://@guid/content/script.js", globalObject);
+        loader.loadSubScript("chrome://@moduleName/content/script.js", globalObject);
     } catch (e) {
         reportError("Error while initializing", e);
     }

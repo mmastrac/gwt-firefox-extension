@@ -1,5 +1,6 @@
 package com.dotspots.example;
 
+import org.mozilla.xpconnect.Components;
 import org.mozilla.xpconnect.gecko.nsIDOMWindowInternal;
 
 import com.dotspots.mozilla.api.TabCreatedHandler;
@@ -15,10 +16,10 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-@Extension(guid = "gwt-firefox-extension-example@code.google.com", name = "Example Extension")
+@Extension(guid = "97966663-9A3B-4DFA-83B1-E68F1DB5257F", name = "Example Extension")
 public class ExampleExtension extends ExtensionEntryPoint {
 	public ExampleExtension() {
-		System.out.println(ImageBundle.INSTANCE.firefoxLogo().getURL());
+		Components.Utils.reportError("Extension is starting up");
 	}
 
 	@Override
@@ -26,6 +27,8 @@ public class ExampleExtension extends ExtensionEntryPoint {
 		getTabs().addCreatedListener(new TabCreatedHandler() {
 			@Override
 			public void onTabCreated(Tab tab) {
+				Components.Utils.reportError("Received tab created event");
+
 				final nsIDOMWindowInternal contentWindow = tab.getLinkedBrowser().getContentWindow().cast();
 				NativeEvents.addEventListener(contentWindow, "DOMContentLoaded", new EventListener() {
 					@Override

@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.SortedSet;
 import java.util.UUID;
@@ -72,12 +70,20 @@ public class ExtensionLinker extends AbstractLinker {
 
 		// Violate the war dir out of our context
 		JJSOptions jjsOptions = violateJJSOptions(logger, context);
-		File warDir = violateWarDir(logger, jjsOptions);
 
-		File xpiDir = new File(warDir, "xpi");
-		if (!xpiDir.exists()) {
-			logger.log(TreeLogger.ERROR, "Unable to locate xpi directory underneath your war directory");
-			throw new UnableToCompleteException();
+		final String xpiDirProperty = System.getProperty("xpi.dir");
+
+		File xpiDir;
+
+		if (xpiDirProperty == null) {
+			File warDir = violateWarDir(logger, jjsOptions);
+			xpiDir = new File(warDir, "xpi");
+			if (!xpiDir.exists()) {
+				logger.log(TreeLogger.ERROR, "Unable to locate xpi directory underneath your war directory");
+				throw new UnableToCompleteException();
+			}
+		} else {
+			xpiDir = new File(xpiDirProperty).getAbsoluteFile();
 		}
 
 		File xpiChromeDir = new File(xpiDir, "chrome");
@@ -103,7 +109,7 @@ public class ExtensionLinker extends AbstractLinker {
 		try {
 			// Write the singleton
 			extensionZipWriter.putNextEntry(new ZipEntry("components/singleton.js"));
-			String script = readTemplatedClassResource(context, uuid);
+			String script = readTemplatedClassResource(context, "singleton.js", uuid);
 			extensionZipWriter.write(script.getBytes("UTF-8"));
 			extensionZipWriter.closeEntry();
 
@@ -173,7 +179,7 @@ public class ExtensionLinker extends AbstractLinker {
 
 			// Write the appropriate content script
 			if (isHostedMode) {
-				String script = readTemplatedClassResource(context, uuid);
+				String script = readTemplatedClassResource(context, "script.js", uuid);
 				zipWriter.write(script.getBytes("UTF-8"));
 			} else {
 				CompilationResult result = compilationResults.first();
@@ -193,17 +199,15 @@ public class ExtensionLinker extends AbstractLinker {
 
 			recursiveAddXpiContentDir(zipWriter, "chrome/", xpiChromeDir);
 
-			if (!isHostedMode) {
-				// Write the remaining resources under content/
-				for (EmittedArtifact artifact : artifacts.find(EmittedArtifact.class)) {
-					zipWriter.putNextEntry(new ZipEntry(artifact.getPartialPath()));
+			// Write the remaining resources under content/
+			for (EmittedArtifact artifact : artifacts.find(EmittedArtifact.class)) {
+				zipWriter.putNextEntry(new ZipEntry("chrome/content/" + artifact.getPartialPath()));
 
-					final InputStream contents = artifact.getContents(logger);
-					Util.copyNoClose(contents, zipWriter);
-					contents.close();
+				final InputStream contents = artifact.getContents(logger);
+				Util.copyNoClose(contents, zipWriter);
+				contents.close();
 
-					zipWriter.closeEntry();
-				}
+				zipWriter.closeEntry();
 			}
 
 			zipWriter.close();
@@ -215,8 +219,8 @@ public class ExtensionLinker extends AbstractLinker {
 		return contentZipBytes;
 	}
 
-	private String readTemplatedClassResource(LinkerContext context, UUID uuid) {
-		InputStream resource = ExtensionLinker.class.getResourceAsStream("script.js");
+	private String readTemplatedClassResource(LinkerContext context, String filename, UUID uuid) {
+		InputStream resource = ExtensionLinker.class.getResourceAsStream(filename);
 		String script = Util.readStreamAsString(resource).replaceAll("@moduleName", context.getModuleName()).replaceAll("@guid",
 				uuid.toString());
 
@@ -256,6 +260,8 @@ public class ExtensionLinker extends AbstractLinker {
 				throw new UnableToCompleteException();
 			}
 
+			logger.log(TreeLogger.WARN, "No xpi.dir system property specified, assuming it lives under war/xpi");
+
 			return warDir;
 		}
 
@@ -289,20 +295,6 @@ public class ExtensionLinker extends AbstractLinker {
 
 		logger.log(TreeLogger.ERROR, "StandardLinkerContext fields changed on us (broken hack)");
 		throw new UnableToCompleteException();
-	}
-
-	private Collection<? extends EmittedArtifact> emitResult(TreeLogger logger, LinkerContext context, CompilationResult result)
-			throws UnableToCompleteException {
-		StringBuffer b = new StringBuffer();
-		b.append(getModulePrefix(logger, context));
-		for (String str : result.getJavaScript()) {
-			b.append(str);
-		}
-		b.append(getModuleSuffix(logger, context));
-
-		final SyntheticArtifact script = emitString(logger, b.toString().replaceAll("__SYMBOL_ID__", result.getStrongName()), "script.js");
-
-		return Arrays.asList(script);
 	}
 
 	@Override

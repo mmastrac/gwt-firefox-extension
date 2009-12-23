@@ -1,25 +1,20 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 	<Description about="urn:mozilla:install-manifest">
-		<em:id>mozillabutton@dotspots.com</em:id>
-		<em:name>DotSpots@SUFFIX@</em:name>
-		<em:version>@VERSION@</em:version>
-		<em:description>Enables the DotSpots engine, allowing users to create and view dots on any page. (@DATE@@SUFFIX@)</em:description>
-		<em:creator>DotSpots</em:creator>
-		<em:homepageURL>http://@SITE@/</em:homepageURL>
-		<em:iconURL>chrome://dotspots/skin/addon.png</em:iconURL>
-		<em:aboutURL>http://@SITE@/</em:aboutURL>
-		<em:optionsURL>http://@SITE@/#settings</em:optionsURL>
-		<em:type>2</em:type>
-		<em:updateURL><![CDATA[@XPIUPDATEROOT@/update.rdf?guid=%ITEM_ID%&version=%ITEM_VERSION%&application=%APP_ID%&appversion=%APP_VERSION%]]></em:updateURL>
+		<em:id>gwt-firefox-extension-example@code.google.com</em:id>
+		<em:name>Example Extension</em:name>
+		<em:version>1.0</em:version>
+		<em:description>Example GWT-based extension for Firefox</em:description>
+		<em:creator>Matt Mastracci</em:creator>
+		<em:homepageURL>http://code.google.com/p/gwt-firefox-extension</em:homepageURL>
 		
-		<em:file>
-			<Description
-				about="urn:mozilla:extension:dotspots">
-				<em:package>content/dotspots/</em:package>
-				<em:skin>skin/classic/dotspots/</em:skin>
-			</Description>
-		</em:file>
+		<!--
+		<em:iconURL></em:iconURL>
+		<em:aboutURL></em:aboutURL>
+		<em:optionsURL></em:optionsURL>
+		<em:type>2</em:type>
+		<em:updateURL><![CDATA[]]></em:updateURL>
+		-->
 
 		<!-- Firefox -->
 		<em:targetApplication>
