@@ -149,15 +149,6 @@ public class ExtensionLinker extends AbstractLinker {
 
 			EmittedArtifact indexHtml = new URLArtifact(logger, ExtensionLinker.class, "index.html");
 			newArtifacts.add(indexHtml);
-
-			if (isHostedMode) {
-				EmittedArtifact hostedHtml = new URLArtifact(logger, HostedModeLinker.class, "hosted.html");
-				newArtifacts.add(hostedHtml);
-
-				String extensionHostedHtml = readTemplatedClassResource(context, "extension-hosted.html", uuid);
-				newArtifacts.add(new SyntheticArtifact(ExtensionLinker.class, "extension-hosted.html",
-						extensionHostedHtml.getBytes("UTF-8")));
-			}
 		} catch (IOException e) {
 			logger.log(TreeLogger.ERROR, "Unexpected IO error", e);
 			throw new UnableToCompleteException();
@@ -208,10 +199,17 @@ public class ExtensionLinker extends AbstractLinker {
 			zipWriter.closeEntry();
 
 			if (isHostedMode) {
-				final ZipEntry zipEntryHosted = new ZipEntry("chrome/content/extension-hosted-window.xul");
+				ZipEntry zipEntryHosted = new ZipEntry("chrome/content/extension-hosted.html");
 				zipWriter.putNextEntry(zipEntryHosted);
-				String script = readTemplatedClassResource(context, "extension-hosted-window.xul", uuid);
+				String script = readTemplatedClassResource(context, "extension-hosted.html", uuid);
 				zipWriter.write(script.getBytes("UTF-8"));
+				zipWriter.closeEntry();
+
+				zipEntryHosted = new ZipEntry("chrome/content/hosted.html");
+				zipWriter.putNextEntry(zipEntryHosted);
+				final InputStream resource = HostedModeLinker.class.getResourceAsStream("hosted.html");
+				Util.copyNoClose(resource, zipWriter);
+				resource.close();
 				zipWriter.closeEntry();
 			}
 

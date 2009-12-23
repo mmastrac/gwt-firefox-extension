@@ -29,7 +29,7 @@ try {
 	var ww = Components.classes[CID_WINDOW_WATCHER]
 			.getService(nsIWindowWatcher);
 	var win = ww.openWindow(null,
-			"chrome://@moduleName/content/extension-hosted-window.xul"
+			"chrome://@moduleName/content/extension-hosted.html"
 					+ "?gwt.module=@moduleName" + "&gwt.base=" + base
 					+ "&gwt.codesvr=" + codeServer, "oophm", "chrome", null);
 } catch (e) {
