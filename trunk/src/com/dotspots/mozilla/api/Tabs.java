@@ -13,8 +13,11 @@ import org.mozilla.xpconnect.gecko.nsIXULWindow;
 
 import com.dotspots.mozilla.dom.ChromeWindow;
 import com.dotspots.mozilla.dom.InternalSimpleIteratorWrapper;
+import com.dotspots.mozilla.dom.NodeListIterator;
 import com.dotspots.mozilla.dom.xul.Browser;
 import com.dotspots.mozilla.dom.xul.Tab;
+import com.dotspots.mozilla.dom.xul.TabContainer;
+import com.dotspots.mozilla.dom.xul.TabbedBrowser;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
@@ -65,7 +68,15 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 			return;
 		}
 
-		chromeWindow.getDocument().getBrowser().getTabContainer().addEventListener("TabOpen", new EventListener() {
+		final TabbedBrowser browser = chromeWindow.getDocument().getBrowser();
+		final TabContainer tabContainer = browser.getTabContainer();
+
+		// Simulate TabOpen for existing browsers
+		for (Browser existingBrowser : NodeListIterator.iterable(browser.getBrowsers())) {
+			onTabBrowserOpened(existingBrowser);
+		}
+
+		tabContainer.addEventListener("TabOpen", new EventListener() {
 			@Override
 			public void onBrowserEvent(Event event) {
 				final Tab tab = (Tab) event.getEventTarget().cast();
@@ -77,7 +88,7 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 			}
 		});
 
-		chromeWindow.getDocument().getBrowser().getTabContainer().addEventListener("TabClose", new EventListener() {
+		tabContainer.addEventListener("TabClose", new EventListener() {
 			@Override
 			public void onBrowserEvent(Event event) {
 				final Tab tab = (Tab) event.getEventTarget().cast();
