@@ -1,4 +1,4 @@
-package com.dotspots.mozilla;
+package com.dotspots.mozilla.extension;
 
 import com.dotspots.mozilla.api.Tabs;
 import com.google.gwt.core.client.EntryPoint;

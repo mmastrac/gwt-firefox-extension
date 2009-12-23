@@ -8,7 +8,10 @@ import com.google.gwt.user.client.EventListener;
 public class XulElement extends Element {
 	public final static String XUL_NAMESPACE = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
-	public HandlerRegistration addEventListener(String eventName, EventListener eventListener) {
+	protected XulElement() {
+	}
+
+	public final HandlerRegistration addEventListener(String eventName, EventListener eventListener) {
 		return NativeEvents.addEventListener(this, eventName, eventListener);
 	}
 }
