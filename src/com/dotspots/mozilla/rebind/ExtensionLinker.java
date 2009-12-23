@@ -24,6 +24,7 @@ import com.google.gwt.core.ext.linker.EmittedArtifact;
 import com.google.gwt.core.ext.linker.LinkerOrder;
 import com.google.gwt.core.ext.linker.SyntheticArtifact;
 import com.google.gwt.core.ext.linker.LinkerOrder.Order;
+import com.google.gwt.core.ext.linker.impl.HostedModeLinker;
 import com.google.gwt.core.ext.linker.impl.StandardLinkerContext;
 import com.google.gwt.dev.About;
 import com.google.gwt.dev.jjs.JJSOptions;
@@ -131,27 +132,36 @@ public class ExtensionLinker extends AbstractLinker {
 			}
 
 			extensionZipWriter.close();
+
+			if (isHostedMode) {
+				// In hosted mode, artifacts are served by the hosted mode server and not zipped
+				newArtifacts.addAll(artifacts);
+			} else {
+				// In production mode, we don't write them to the output directory
+				for (Artifact<?> artifact : artifacts) {
+					if (!(artifact instanceof EmittedArtifact)) {
+						newArtifacts.add(artifact);
+					}
+				}
+			}
+
+			newArtifacts.add(new SyntheticArtifact(ExtensionLinker.class, "extension.xpi", extensionZipBytes.toByteArray()));
+
+			EmittedArtifact indexHtml = new URLArtifact(logger, ExtensionLinker.class, "index.html");
+			newArtifacts.add(indexHtml);
+
+			if (isHostedMode) {
+				EmittedArtifact hostedHtml = new URLArtifact(logger, HostedModeLinker.class, "hosted.html");
+				newArtifacts.add(hostedHtml);
+
+				String extensionHostedHtml = readTemplatedClassResource(context, "extension-hosted.html", uuid);
+				newArtifacts.add(new SyntheticArtifact(ExtensionLinker.class, "extension-hosted.html",
+						extensionHostedHtml.getBytes("UTF-8")));
+			}
 		} catch (IOException e) {
 			logger.log(TreeLogger.ERROR, "Unexpected IO error", e);
 			throw new UnableToCompleteException();
 		}
-
-		if (isHostedMode) {
-			// In hosted mode, artifacts are served by the hosted mode server and not zipped
-			newArtifacts.addAll(artifacts);
-		} else {
-			// In production mode, we don't write them to the output directory
-			for (Artifact<?> artifact : artifacts) {
-				if (!(artifact instanceof EmittedArtifact)) {
-					newArtifacts.add(artifact);
-				}
-			}
-		}
-
-		newArtifacts.add(new SyntheticArtifact(ExtensionLinker.class, "extension.xpi", extensionZipBytes.toByteArray()));
-
-		EmittedArtifact indexHtml = new URLArtifact(logger, ExtensionLinker.class, "index.html");
-		newArtifacts.add(indexHtml);
 
 		return newArtifacts;
 	}
@@ -196,6 +206,14 @@ public class ExtensionLinker extends AbstractLinker {
 			}
 
 			zipWriter.closeEntry();
+
+			if (isHostedMode) {
+				final ZipEntry zipEntryHosted = new ZipEntry("chrome/content/extension-hosted-window.xul");
+				zipWriter.putNextEntry(zipEntryHosted);
+				String script = readTemplatedClassResource(context, "extension-hosted-window.xul", uuid);
+				zipWriter.write(script.getBytes("UTF-8"));
+				zipWriter.closeEntry();
+			}
 
 			recursiveAddXpiContentDir(zipWriter, "chrome/", xpiChromeDir);
 

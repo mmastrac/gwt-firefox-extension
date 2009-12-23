@@ -12,6 +12,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
@@ -37,6 +38,10 @@ public class ExampleExtension extends ExtensionEntryPoint {
 						final Element div = document.createElement("div").cast();
 						div.setInnerText("DOMContentLoaded fired on " + contentWindow.getLocation().toString());
 
+						div.getStyle().setPosition(Position.FIXED);
+						div.getStyle().setTop(0, Unit.PX);
+						div.getStyle().setLeft(0, Unit.PX);
+						div.getStyle().setRight(0, Unit.PX);
 						div.getStyle().setBackgroundColor("#eeeeee");
 						div.getStyle().setBorderWidth(1, Unit.PX);
 						div.getStyle().setBorderStyle(BorderStyle.SOLID);
@@ -44,6 +49,8 @@ public class ExampleExtension extends ExtensionEntryPoint {
 						final ImageElement image = document.createImageElement();
 						image.setSrc(ImageBundle.INSTANCE.firefoxLogo().getURL());
 						div.appendChild(image);
+
+						document.getBody().appendChild(div);
 					}
 				});
 			}

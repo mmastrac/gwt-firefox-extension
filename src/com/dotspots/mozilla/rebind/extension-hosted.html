@@ -1,8 +1,6 @@
 <html>
 <body>
 
-<font face='arial' size='-1'>Running extension in hosted mode.  Please do not close this window.</font>
-
 <script>
 window["@moduleName"] = { 
 	onScriptLoad: function() {
@@ -10,6 +8,7 @@ window["@moduleName"] = {
 	}
 }
 </script>
-<iframe id="hosted" src="hosted.html?@moduleName"></iframe>
+
+<iframe id="hosted" src="http://localhost:8888/@moduleName/hosted.html?@moduleName"></iframe>
 </body>
 </html>

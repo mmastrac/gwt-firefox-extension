@@ -12,11 +12,11 @@ public final class Components {
 		}
 
 		public static native void reportError(String error) /*-{
-			this.reportError(error);
+			Components.utils.reportError(error);
 		}-*/;
 
 		public static native void reportError(JavaScriptException e) /*-{
-			this.reportError(e.@com.google.gwt.core.client.JavaScriptException::getException()());
+			Components.utils.reportError(e.@com.google.gwt.core.client.JavaScriptException::getException()());
 		}-*/;
 	}
 }
