@@ -1,0 +1,7 @@
+<module>
+	<inherits name='com.dotspots.FirefoxExtension' />
+
+	<source path="example" />
+	
+	<entry-point class='com.dotspots.example.ExampleExtension' />
+</module>

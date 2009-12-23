@@ -1,5 +1,7 @@
 package com.dotspots.mozilla;
 
-public @interface ExtensionGuid {
+public @interface Extension {
 	public String guid();
+
+	public String name();
 }

@@ -7,7 +7,7 @@ import com.google.gwt.user.client.EventListener;
 /**
  * Exposes addEventListener to GWT code. Not recommended for use on other browsers.
  */
-public class InternalEvents {
+public class NativeEvents {
 	private static class InternalHandlerRegistration implements HandlerRegistration {
 		private final JavaScriptObject hasEventHandlers;
 		private final String eventName;
