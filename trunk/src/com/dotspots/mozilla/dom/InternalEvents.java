@@ -1,7 +1,6 @@
 package com.dotspots.mozilla.dom;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.EventListener;
 
@@ -30,10 +29,10 @@ public class InternalEvents {
 		return function(e) { eventListener.@com.google.gwt.user.client.EventListener::onBrowserEvent(Lcom/google/gwt/user/client/Event;)(e) };
 	}-*/;
 
-	public static HandlerRegistration addEventListener(Element element, String eventName, EventListener eventListener) {
+	public static HandlerRegistration addEventListener(JavaScriptObject hasEventHandlers, String eventName, EventListener eventListener) {
 		JavaScriptObject boundEventListener = bindEventListenerAsFunction(eventListener);
-		addEventListener0(element, eventName, boundEventListener, true);
-		return new InternalHandlerRegistration(element, eventName, boundEventListener);
+		addEventListener0(hasEventHandlers, eventName, boundEventListener, true);
+		return new InternalHandlerRegistration(hasEventHandlers, eventName, boundEventListener);
 	}
 
 	private static native HandlerRegistration addEventListener0(JavaScriptObject hasEventHandlers, String eventName,
