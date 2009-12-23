@@ -1,8 +1,8 @@
-content 	dotspots 					@ROOT@chrome/content/
-content 	dotspots 					@ROOT@chrome/content/ contentaccessible=yes
+content 	dotspots 					jar:content.jar!/chrome/content/
+content 	dotspots 					jar:content.jar!/chrome/content/ contentaccessible=yes
 
-skin   		dotspots	classic/1.0     @ROOT@chrome/skin/classic/
-locale      dotspots 	en-US 			@ROOT@chrome/locale/en-US/
+skin   		dotspots	classic/1.0     jar:content.jar!/chrome/skin/classic/
+locale      dotspots 	en-US 			jar:content.jar!/chrome/locale/en-US/
 
 style 		chrome://global/content/customizeToolbar.xul chrome://@UUID@/skin/style.css
 
