@@ -4,12 +4,12 @@
 <font face='arial' size='-1'>Running extension in hosted mode.  Please do not close this window.</font>
 
 <script>
-window["com.dotspots.ExtensionModule"] = { 
+window["@moduleName"] = { 
 	onScriptLoad: function() {
-		document.getElementById('hosted').contentWindow.gwtOnLoad(function(){}, "com.dotspots.ExtensionModule", "");
+		document.getElementById('hosted').contentWindow.gwtOnLoad(function(){}, "@moduleName", "");
 	}
 }
 </script>
-<iframe id="hosted" src="hosted.html?com.dotspots.ExtensionModule"></iframe>
+<iframe id="hosted" src="hosted.html?@moduleName"></iframe>
 </body>
 </html>

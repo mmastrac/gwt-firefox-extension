@@ -1,0 +1,22 @@
+content 	@lguid 					jar:content.jar!chrome/content/
+content 	@lguid 					jar:content.jar!chrome/content/ contentaccessible=yes
+
+skin   		@lguid	classic/1.0     jar:content.jar!chrome/skin/classic/
+locale      @lguid 	en-US 			jar:content.jar!chrome/locale/en-US/
+
+style 		chrome://global/content/customizeToolbar.xul chrome://@lguid/skin/style.css
+
+# Firefox
+overlay 	chrome://browser/content/browser.xul chrome://@lguid/content/overlay.xul
+
+# Thunderbird mail
+#overlay	chrome://messenger/content/messenger.xul chrome://@lguid/content/overlay.xul
+
+# Thunderbird compose
+#overlay	chrome://messenger/content/messengercompose/messengercompose.xul chrome://@lguid/content/overlay.xul
+
+# Thunderbird address book
+#overlay	chrome://messenger/content/addressbook/addressbook.xul chrome://@lguid/content/overlay.xul
+
+# Sunbird
+#overlay	chrome://calendar/content/calendar.xul chrome://@lguid/content/overlay.xul

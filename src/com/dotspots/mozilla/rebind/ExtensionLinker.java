@@ -29,7 +29,7 @@ public class ExtensionLinker extends AbstractLinker {
 		//
 		out.print("/* Linked: " + new Date() + " */");
 		out.newline();
-		out.print("var $symbol_id = \"__SYMBOL_ID__\";");
+		out.print("var $strongName = \"__SYMBOL_ID__\";");
 		out.newlineOpt();
 		out.print("var $gwt_version = \"" + About.getGwtVersion() + "\";");
 		out.newlineOpt();

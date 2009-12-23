@@ -1,5 +1,5 @@
 /**
- * DotSpots bootstrap singleton.
+ * Bootstrap singleton.
  */
 
 const nsISupports = Components.interfaces.nsISupports;
@@ -11,9 +11,9 @@ const mozIJSSubScriptLoader = Components.interfaces.mozIJSSubScriptLoader;
 const CID_ALERTS_SERVICE = "@mozilla.org/alerts-service;1";
 const CID_JS_SUBSCRIPT_LOADER = "@mozilla.org/moz/jssubscript-loader;1";
 
-const CLASS_ID = Components.ID("{D35B5F88-5466-486A-BBC2-0FB9ECED45DB}");
-const CLASS_NAME = "DotSpots singleton";
-const CONTRACT_ID = "@com.dotspots/singleton;1";
+const CLASS_ID = Components.ID("@guid");
+const CLASS_NAME = "@moduleName";
+const CONTRACT_ID = "@@moduleName/singleton;1";
 
 function reportError(message, e) {
     var errorMessage = e 
@@ -31,10 +31,8 @@ function reportError(message, e) {
 	catch (e) {}
 }
 
-function DotSpotsSingleton() { 
+function Singleton() { 
     try {
-	    var version = 1.8;
-	        
 	    var globalObject = {
 		    // For GWT DOM
 		    __gwt_initHandlers: function() {},
@@ -45,14 +43,14 @@ function DotSpotsSingleton() {
 		    // Helper function for alerting errors	    
 		    alert: reportError,
 		    
-		    __gwt_module: "com.dotspots.ExtensionModule",
-		    __gwt_base: "chrome://dotspots/skin/"
+		    __gwt_module: "@moduleName",
+		    __gwt_base: "chrome://@guid/content/"
 		};
 		
 		globalObject.window = globalObject;
 
         var loader = Components.classes[CID_JS_SUBSCRIPT_LOADER].getService(mozIJSSubScriptLoader);
-        loader.loadSubScript("chrome://dotspots/content/gecko-" + version + "/dotSpots.js", globalObject);
+        loader.loadSubScript("chrome://@guid/content/script.js", globalObject);
     } catch (e) {
         reportError("Error while initializing", e);
     }
@@ -92,7 +90,7 @@ var SingletonModule = {
 			throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
 		
 		if (cid.equals(CLASS_ID))
-			return DotSpotsSingletonFactory;
+			return SingletonFactory;
 		
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	},
