@@ -35,6 +35,6 @@ public final class ChromeWindow extends JavaScriptObject {
 	}-*/;
 
 	public HandlerRegistration addEventListener(String eventName, EventListener eventListener) {
-		return InternalEvents.addEventListener(this, eventName, eventListener);
+		return NativeEvents.addEventListener(this, eventName, eventListener);
 	}
 }

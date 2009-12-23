@@ -1,0 +1,10 @@
+<module>
+	<inherits name='org.mozilla.XPIDL' />
+	<inherits name='com.google.gwt.core.Core' />
+
+	<source path="mozilla/api" />
+	<source path="mozilla/dom" />
+
+	<define-linker name="ext" class="com.dotspots.mozilla.rebind.ExtensionLinker" />
+	<add-linker name="ext" />
+</module>
