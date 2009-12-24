@@ -29,7 +29,22 @@ public final class Browser extends Element {
 		return this.docShell;
 	}-*/;
 
-	public native HandlerRegistration addProgressListener(nsIWebProgressListener listener) /*-{
+	/**
+	 * Adds a weakly-referenced progress listener to the browser. You'll want to stash a references to the
+	 * HandlerRegistration somewhere so your event handler doesn't get GC'd.
+	 */
+	public HandlerRegistration addProgressListener(final nsIWebProgressListener listener) {
+		addProgressListener0(listener);
+
+		return new HandlerRegistration() {
+			@Override
+			public void removeHandler() {
+				removeProgressListener0(listener);
+			}
+		};
+	}
+
+	private native void addProgressListener0(nsIWebProgressListener listener) /*-{
 		var browser = this;
 		var Ci = Components.interfaces;
 
@@ -41,9 +56,10 @@ public final class Browser extends Element {
 		};
 
 		browser.addProgressListener(listener, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+	}-*/;
 
-		// TODO: { remove: function() { browser.removeProgressListener(listener); } };
-		return null;
+	private native void removeProgressListener0(nsIWebProgressListener listener) /*-{
+		browser.removeProgressListener(listener);
 	}-*/;
 
 }

@@ -100,10 +100,11 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 
 	private void onTabBrowserOpened(final Tab tab) {
 		handlerManager.fireEvent(new TabCreatedEvent(tab));
+		handlerManager.fireEvent(new TabNavigatedEvent(tab));
 
 		final Browser browser = tab.getLinkedBrowser();
 
-		browser.addProgressListener(nsIWebProgressListener.wrap(new nsIWebProgressListener.Callback() {
+		final HandlerRegistration progressListener = browser.addProgressListener(nsIWebProgressListener.wrap(new nsIWebProgressListener.Callback() {
 			@Override
 			public void onStatusChange(nsIWebProgress aWebProgress, nsIRequest aRequest, int aStatus, String aMessage) {
 
@@ -131,6 +132,13 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 				handlerManager.fireEvent(new TabNavigatedEvent(tab));
 			}
 		}));
+
+		tab.addEventListener("TabClose", new EventListener() {
+			@Override
+			public void onBrowserEvent(Event event) {
+				progressListener.removeHandler();
+			}
+		});
 	}
 
 	private ChromeWindow getChromeWindowFromXulWindow(nsIXULWindow window) {
