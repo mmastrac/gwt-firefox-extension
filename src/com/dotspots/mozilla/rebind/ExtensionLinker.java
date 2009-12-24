@@ -106,6 +106,7 @@ public class ExtensionLinker extends AbstractLinker {
 
 		ByteArrayOutputStream extensionZipBytes = new ByteArrayOutputStream();
 		ZipOutputStream extensionZipWriter = new ZipOutputStream(extensionZipBytes);
+		extensionZipWriter.setLevel(9);
 
 		try {
 			// Write the singleton
@@ -119,6 +120,7 @@ public class ExtensionLinker extends AbstractLinker {
 			extensionZipWriter.write(contentZipBytes.toByteArray());
 			extensionZipWriter.closeEntry();
 
+			// Write the non-chrome files from the XPI template recursively
 			for (File file : xpiDir.listFiles()) {
 				if (file.isDirectory()) {
 					if (file.getName().equals("chrome")) {
@@ -133,15 +135,10 @@ public class ExtensionLinker extends AbstractLinker {
 
 			extensionZipWriter.close();
 
-			if (isHostedMode) {
-				// In hosted mode, artifacts are served by the hosted mode server and not zipped
-				newArtifacts.addAll(artifacts);
-			} else {
-				// In production mode, we don't write them to the output directory
-				for (Artifact<?> artifact : artifacts) {
-					if (!(artifact instanceof EmittedArtifact)) {
-						newArtifacts.add(artifact);
-					}
+			// Write anything that isn't an emitted artifact to the output directory.
+			for (Artifact<?> artifact : artifacts) {
+				if (!(artifact instanceof EmittedArtifact)) {
+					newArtifacts.add(artifact);
 				}
 			}
 

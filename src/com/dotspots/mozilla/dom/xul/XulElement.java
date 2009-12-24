@@ -5,7 +5,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.EventListener;
 
-public class XulElement extends Element {
+/**
+ * Base class for all XUL elements.
+ */
+public abstract class XulElement extends Element {
 	public final static String XUL_NAMESPACE = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
 	protected XulElement() {

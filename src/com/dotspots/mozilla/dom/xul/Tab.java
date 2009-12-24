@@ -10,7 +10,7 @@ public final class Tab extends XulElement {
 	}
 
 	/**
-	 * Gets the link XUL <browser> for this tab.
+	 * Gets the linked XUL <browser> for this tab.
 	 */
 	public native Browser getLinkedBrowser() /*-{
 		return this.linkedBrowser;
