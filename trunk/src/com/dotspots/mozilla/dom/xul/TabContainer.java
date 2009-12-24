@@ -1,6 +1,5 @@
 package com.dotspots.mozilla.dom.xul;
 
-
 /**
  * XUL <tabbrowser> element's tabContainer.
  * 
@@ -9,4 +8,12 @@ package com.dotspots.mozilla.dom.xul;
 public final class TabContainer extends XulElement {
 	protected TabContainer() {
 	}
+
+	public native int getItemCount() /*-{
+		return this.itemCount;
+	}-*/;
+
+	public native Tab getItemAtIndex(int index) /*-{
+		return this.getItemAtIndex(index);
+	}-*/;
 }

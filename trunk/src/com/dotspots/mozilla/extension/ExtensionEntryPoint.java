@@ -15,6 +15,7 @@ public abstract class ExtensionEntryPoint implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+		onExtensionStart();
 	}
 
 	/**

@@ -13,7 +13,6 @@ import org.mozilla.xpconnect.gecko.nsIXULWindow;
 
 import com.dotspots.mozilla.dom.ChromeWindow;
 import com.dotspots.mozilla.dom.InternalSimpleIteratorWrapper;
-import com.dotspots.mozilla.dom.NodeListIterator;
 import com.dotspots.mozilla.dom.xul.Browser;
 import com.dotspots.mozilla.dom.xul.Tab;
 import com.dotspots.mozilla.dom.xul.TabContainer;
@@ -41,6 +40,10 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 
 	public HandlerRegistration addCreatedListener(TabCreatedHandler handler) {
 		return handlerManager.addHandler(TabCreatedEvent.TYPE, handler);
+	}
+
+	public HandlerRegistration addNavigatedListener(TabNavigatedHandler handler) {
+		return handlerManager.addHandler(TabNavigatedEvent.TYPE, handler);
 	}
 
 	@Override
@@ -72,19 +75,16 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 		final TabContainer tabContainer = browser.getTabContainer();
 
 		// Simulate TabOpen for existing browsers
-		for (Browser existingBrowser : NodeListIterator.iterable(browser.getBrowsers())) {
-			onTabBrowserOpened(existingBrowser);
+		for (int i = 0; i < tabContainer.getItemCount(); i++) {
+			onTabBrowserOpened(tabContainer.getItemAtIndex(i));
 		}
 
 		tabContainer.addEventListener("TabOpen", new EventListener() {
 			@Override
 			public void onBrowserEvent(Event event) {
 				final Tab tab = (Tab) event.getEventTarget().cast();
-				final Browser browser = tab.getLinkedBrowser();
 
-				handlerManager.fireEvent(new TabCreatedEvent(tab));
-
-				onTabBrowserOpened(browser);
+				onTabBrowserOpened(tab);
 			}
 		});
 
@@ -98,7 +98,11 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 		});
 	}
 
-	private void onTabBrowserOpened(final Browser browser) {
+	private void onTabBrowserOpened(final Tab tab) {
+		handlerManager.fireEvent(new TabCreatedEvent(tab));
+
+		final Browser browser = tab.getLinkedBrowser();
+
 		browser.addProgressListener(nsIWebProgressListener.wrap(new nsIWebProgressListener.Callback() {
 			@Override
 			public void onStatusChange(nsIWebProgress aWebProgress, nsIRequest aRequest, int aStatus, String aMessage) {
@@ -107,7 +111,8 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 
 			@Override
 			public void onStateChange(nsIWebProgress aWebProgress, nsIRequest aRequest, int aStateFlags, int aStatus) {
-
+				// GWT.log("State flags: " + Integer.toHexString(aStateFlags) + ", status: " +
+				// Integer.toHexString(aStatus), null);
 			}
 
 			@Override
@@ -123,7 +128,7 @@ public class Tabs implements nsIWindowMediatorListener.Callback {
 
 			@Override
 			public void onLocationChange(nsIWebProgress aWebProgress, nsIRequest aRequest, nsIURI aLocation) {
-
+				handlerManager.fireEvent(new TabNavigatedEvent(tab));
 			}
 		}));
 	}

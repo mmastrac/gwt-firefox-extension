@@ -3,7 +3,7 @@ package com.dotspots.example;
 import org.mozilla.xpconnect.Components;
 import org.mozilla.xpconnect.gecko.nsIDOMWindowInternal;
 
-import com.dotspots.mozilla.api.TabCreatedHandler;
+import com.dotspots.mozilla.api.TabNavigatedHandler;
 import com.dotspots.mozilla.dom.NativeEvents;
 import com.dotspots.mozilla.dom.xul.Tab;
 import com.dotspots.mozilla.extension.Extension;
@@ -25,9 +25,9 @@ public class ExampleExtension extends ExtensionEntryPoint {
 
 	@Override
 	public void onExtensionStart() {
-		getTabs().addCreatedListener(new TabCreatedHandler() {
+		getTabs().addNavigatedListener(new TabNavigatedHandler() {
 			@Override
-			public void onTabCreated(Tab tab) {
+			public void onTabNavigated(Tab tab) {
 				Components.Utils.reportError("Received tab created event");
 
 				final nsIDOMWindowInternal contentWindow = tab.getLinkedBrowser().getContentWindow().cast();
