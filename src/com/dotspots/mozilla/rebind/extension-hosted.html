@@ -1,14 +1,18 @@
 <html>
+<style>
+body, html { overflow: hidden; }
+</style>
 <body>
 
 <script>
 window["@moduleName"] = { 
 	onScriptLoad: function() {
-		document.getElementById('hosted').contentWindow.gwtOnLoad(function(){}, "@moduleName", "");
+		document.getElementById('hosted').contentWindow.gwtOnLoad(function(){}, "@moduleName", "http://localhost:8888/@moduleName/");
 	}
 }
 </script>
-	<label style="font: 10pt arial; padding: 1em;">Running extension in hosted mode.  Please do not close this window.</label>
+
+<div style="font: 10pt arial; padding: 1em; white-space: nowrap;">Running extension in hosted mode.  Please do not close this window.</div>
 
 <iframe id="hosted" src="hosted.html?@moduleName" style="position:absolute; top:-1000px; left:-1000px;"></iframe>
 </body>
