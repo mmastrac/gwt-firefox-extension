@@ -3,11 +3,13 @@ package com.dotspots.example;
 import org.mozilla.xpconnect.Components;
 import org.mozilla.xpconnect.gecko.nsIDOMWindowInternal;
 
+import com.dotspots.mozilla.api.TabCreatedHandler;
 import com.dotspots.mozilla.api.TabNavigatedHandler;
 import com.dotspots.mozilla.dom.NativeEvents;
 import com.dotspots.mozilla.dom.xul.Tab;
 import com.dotspots.mozilla.extension.Extension;
 import com.dotspots.mozilla.extension.ExtensionEntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -20,20 +22,35 @@ import com.google.gwt.user.client.EventListener;
 @Extension(guid = "97966663-9A3B-4DFA-83B1-E68F1DB5257F", name = "Example Extension")
 public class ExampleExtension extends ExtensionEntryPoint {
 	public ExampleExtension() {
-		Components.Utils.reportError("Extension is starting up");
+	}
+
+	public void log(String message) {
+		GWT.log(message, null);
+		Components.Utils.reportError(message);
 	}
 
 	@Override
 	public void onExtensionStart() {
+		log("Extension is starting up");
+
+		getTabs().addCreatedListener(new TabCreatedHandler() {
+			@Override
+			public void onTabCreated(Tab tab) {
+				log("Received tab created event: " + getBrowserLocation(tab));
+			}
+		});
+
 		getTabs().addNavigatedListener(new TabNavigatedHandler() {
 			@Override
-			public void onTabNavigated(Tab tab) {
-				Components.Utils.reportError("Received tab created event");
+			public void onTabNavigated(final Tab tab) {
+				log("Received tab navigated event: " + getBrowserLocation(tab));
 
 				final nsIDOMWindowInternal contentWindow = tab.getLinkedBrowser().getContentWindow().cast();
 				NativeEvents.addEventListener(contentWindow, "DOMContentLoaded", new EventListener() {
 					@Override
 					public void onBrowserEvent(Event event) {
+						log("Received DOMContentLoaded event: " + getBrowserLocation(tab));
+
 						final Document document = contentWindow.getDocument().cast();
 						final Element div = document.createElement("div").cast();
 						div.setInnerText("DOMContentLoaded fired on " + contentWindow.getLocation().toString());
@@ -55,5 +72,10 @@ public class ExampleExtension extends ExtensionEntryPoint {
 				});
 			}
 		});
+	}
+
+	protected String getBrowserLocation(Tab tab) {
+		final nsIDOMWindowInternal contentWindow = tab.getLinkedBrowser().getContentWindow().cast();
+		return contentWindow.getLocation().toString();
 	}
 }
