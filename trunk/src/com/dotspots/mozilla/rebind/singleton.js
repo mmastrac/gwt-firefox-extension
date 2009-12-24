@@ -7,9 +7,11 @@ const nsIAlertsService = Components.interfaces.nsIAlertsService;
 const nsIFactory = Components.interfaces.nsIFactory;
 const nsIComponentRegistrar = Components.interfaces.nsIComponentRegistrar;
 const mozIJSSubScriptLoader = Components.interfaces.mozIJSSubScriptLoader;
+const nsICategoryManager = Components.interfaces.nsICategoryManager;
 
 const CID_ALERTS_SERVICE = "@mozilla.org/alerts-service;1";
 const CID_JS_SUBSCRIPT_LOADER = "@mozilla.org/moz/jssubscript-loader;1";
+const CID_CATEGORY_MANAGER = "@mozilla.org/categorymanager;1";
 
 const CLASS_ID = Components.ID("@guid");
 const CLASS_NAME = "@moduleName";
@@ -78,11 +80,24 @@ var SingletonModule = {
 	registerSelf: function(compMgr, fileSpec, location, type) {
 		compMgr = compMgr.QueryInterface(nsIComponentRegistrar);
 		compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, fileSpec, location, type);
+		
+		// Ask for app-startup notification
+	    var catMan = Components.classes[CID_CATEGORY_MANAGER].getService(nsICategoryManager);
+	    catMan.addCategoryEntry("app-startup",
+	    		CLASS_NAME,
+	    		"service," + CONTRACT_ID,
+                true,  /* Persist this entry */
+                true); /* Replace existing entry */
 	},
 	
 	unregisterSelf: function(compMgr, location, type) {
 		compMgr = compMgr.QueryInterface(nsIComponentRegistrar);
 		compMgr.unregisterFactoryLocation(CLASS_ID, location);        
+		
+	    var catMan = Components.classes[CID_CATEGORY_MANAGER].getService(nsICategoryManager);
+	    catMan.deleteCategoryEntry("app-startup",
+                CONTRACT_ID,
+                true);
 	},
 	  
 	getClassObject: function(compMgr, cid, iid) {

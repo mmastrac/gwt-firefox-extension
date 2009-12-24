@@ -4,6 +4,7 @@ import com.dotspots.mozilla.dom.xul.TabbedBrowser;
 import com.dotspots.mozilla.dom.xul.XulElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 
 public final class ChromeDocument extends Document {
 	protected ChromeDocument() {
@@ -25,12 +26,12 @@ public final class ChromeDocument extends Document {
 		return this.defaultView.gBrowser;
 	}-*/;
 
-	public native Element getContextMenuTextNodeTarget() /*-{
+	public native Element getPopupRangeParent() /*-{
 		// Prefer popupRangeParent over popupNode, because it can supply the exact text node
 		return this.popupRangeParent;
 	}-*/;
 
-	public native Element getContextMenuTarget() /*-{
+	public native Node getPopupNode() /*-{
 		return this.popupNode;
 	}-*/;
 }
