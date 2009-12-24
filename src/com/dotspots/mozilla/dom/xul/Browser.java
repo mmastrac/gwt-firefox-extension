@@ -42,7 +42,8 @@ public final class Browser extends Element {
 
 		browser.addProgressListener(listener, Components.interfaces.nsIWebProgress.NOTIFY_ALL);
 
-		return { remove: function() { browser.removeProgressListener(listener); } };
+		// TODO: { remove: function() { browser.removeProgressListener(listener); } };
+		return null;
 	}-*/;
 
 }
