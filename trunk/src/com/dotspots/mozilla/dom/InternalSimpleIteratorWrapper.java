@@ -17,8 +17,9 @@ public class InternalSimpleIteratorWrapper<T extends JavaScriptObject> implement
 		return iterator.hasMoreElements();
 	};
 
+	@SuppressWarnings("unchecked")
 	public T next() {
-		return iterator.getNext().cast();
+		return (T) iterator.getNext().cast();
 	};
 
 	public void remove() {

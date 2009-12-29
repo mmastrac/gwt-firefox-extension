@@ -1,0 +1,169 @@
+<?eclipse.ant.import?>
+<project basedir="." name="gwt-firefox-extension" default="build">
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+
+	<property name="output.dir" value="build" />
+	<property name="dist.dir" value="${output.dir}/dist" />
+	<property name="classes.dir" value="${output.dir}/bin/src" />
+	<property name="classes.test.dir" value="${output.dir}/bin/test" />
+
+
+	<!-- .exe suffix for tools -->
+	<condition property="exe.suffix" value=".exe">
+		<os family="windows" />
+	</condition>
+	<condition property="exe.suffix" value=".osx">
+		<os family="mac" />
+	</condition>
+	<condition property="exe.suffix" value=".linux.x86">
+		<os family="unix" />
+	</condition>
+
+
+	<!-- GWT Java JVM args -->
+	<condition property="gwt.jvm.args" value="-XstartOnFirstThread">
+		<os family="mac" />
+	</condition>
+	<property name="gwt.jvm.args" value="-showversion" /> <!-- Need to use some sort of arg here to avoid Java barf -->
+
+
+	<!-- GWT testing Java JVM -->
+	<!-- OSX needs a 1.5 JVM to run tests in hosted mode -->
+	<condition property="gwt.hosted.java.command" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/bin/java">
+		<os family="mac" />
+	</condition>
+	<property name="gwt.hosted.java.command" value="java" />
+
+	<property name="gwt.sdk.dir" value="${basedir}/lib" />
+
+	<fileset id="gwt.dev.jar" dir="${gwt.sdk.dir}">
+		<include name="gwt-dev.jar" />
+	</fileset>
+
+	<fileset id="gwt.user.jar" dir="${gwt.sdk.dir}">
+		<include name="gwt-user.jar" />
+	</fileset>
+
+	<tstamp />
+
+	<target name="clean">
+		<delete dir="${output.dir}" />
+	</target>
+
+	<target name="build" depends="compile,jar,compile-test,test">
+	</target>
+
+	<target name="compile" description="Generate .class files from .java files">
+		<mkdir dir="${classes.dir}" />
+
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" source="${source}" target="${target}">
+			<src path="src" />
+			<classpath>
+				<fileset dir="xpidl">
+					<include name="xpidl.jar" />
+				</fileset>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset refid="gwt.user.jar" />
+				<fileset refid="gwt.dev.jar" />
+			</classpath>
+		</javac>
+
+		<!-- Ensure that all non-Java files are available in the classpath -->
+		<copy todir="${classes.dir}">
+			<fileset dir="src">
+				<include name="**/*" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile-test" depends="compile" description="Generate .class files from .java files">
+	</target>
+
+	<target name="dist" depends="jar">
+		<mkdir dir="${dist.dir}" />
+
+		<zip destfile="${dist.dir}/${ant.project.name}-snapshot-${DSTAMP}.zip">
+			<fileset dir="build">
+				<include name="${ant.project.name}.jar" />
+			</fileset>
+		</zip>
+		<zip destfile="${dist.dir}/${ant.project.name}-src-snapshot-${DSTAMP}.zip">
+			<fileset dir=".">
+				<include name="src/**/*.java" />
+			</fileset>
+		</zip>
+
+		<copy file="build/${ant.project.name}.jar" tofile="${dist.dir}/${ant.project.name}-snapshot-${DSTAMP}.jar" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<delete>
+			<fileset dir="build">
+				<include name="${ant.project.name}*.jar" />
+			</fileset>
+		</delete>
+		
+		<jar destfile="build/${ant.project.name}.jar">
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="src">
+				<include name="**/*" />
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="refresh-idl">
+		<untar compression="bzip2" dest="${output.dir}/idl" src="idl/idl.tar.bz2" />
+		<copy todir="${output.dir}/idl" overwrite="true">
+			<fileset dir="idl">
+				<include name="*.idl" />
+			</fileset>
+		</copy>
+
+		<path id="idl_files">
+			<fileset dir="${output.dir}/idl">
+				<include name="*.idl" />
+			</fileset>
+		</path>
+
+		<pathconvert property="idl_files" pathsep=" ">
+			<path refid="idl_files" />
+		</pathconvert>
+
+		<mkdir dir="${output.dir}/idl_compiled/org/mozilla/xpconnect/gecko/" />
+		<exec command="../build/tools/xpidl/gwt.py -O ${output.dir}/idl_compiled/org/mozilla/xpconnect/gecko/ -I ${output.dir}/idl/ ${idl_files}">
+		</exec>
+
+		<javac destdir="${output.dir}/idl_compiled/">
+			<src path="${output.dir}/idl_compiled/" />
+			<src path="idl" />
+			<classpath>
+				<path refid="buildtime.classpath" />
+				<fileset refid="gwt.fileset" />
+			</classpath>
+		</javac>
+
+		<jar destfile="idl/xpidl.jar">
+			<fileset dir="${output.dir}/idl_compiled">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="idl">
+				<include name="**/*.java" />
+				<include name="**/*.xml" />
+			</fileset>
+		</jar>
+
+		<delete dir="${output.dir}/idl" />
+		<delete dir="${output.dir}/idl_compiled" />
+	</target>
+
+	<target name="test">
+		<!-- TODO -->
+	</target>
+</project>
