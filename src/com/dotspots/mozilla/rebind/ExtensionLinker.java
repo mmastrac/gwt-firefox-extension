@@ -137,7 +137,9 @@ public class ExtensionLinker extends AbstractLinker {
 
 			// Write anything that isn't an emitted artifact to the output directory.
 			for (Artifact<?> artifact : artifacts) {
-				if (!(artifact instanceof EmittedArtifact)) {
+				// Cast to Object to work around JDK compiler bug
+				Object artifactBugWorkaround = artifact;
+				if (!(artifactBugWorkaround instanceof EmittedArtifact)) {
 					newArtifacts.add(artifact);
 				}
 			}
