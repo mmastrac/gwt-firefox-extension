@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?xml-stylesheet href="chrome://com.dotspots.Example/skin/style.css"?>
+<?xml-stylesheet href="chrome://@moduleName/skin/style.css"?>
 
 <overlay 
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 

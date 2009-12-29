@@ -87,11 +87,30 @@
 	<target name="dist" depends="jar">
 		<mkdir dir="${dist.dir}" />
 
-		<zip destfile="${dist.dir}/${ant.project.name}-snapshot-${DSTAMP}.zip">
-			<fileset dir="build">
-				<include name="${ant.project.name}.jar" />
+		<zip destfile="build/template.zip">
+			<fileset dir="template">
+				<include name="xpi/**/*" />
 			</fileset>
 		</zip>
+
+		<copy todir="build" file="template/build.xml" overwrite="true" />
+		<copy todir="build" file="template/extensionCreator" overwrite="true" />
+		<chmod perm="a+x" file="build/extensionCreator" />
+
+		<zip destfile="${dist.dir}/${ant.project.name}-snapshot-${DSTAMP}.zip">
+			<zipfileset prefix="${ant.project.name}" dir="build">
+				<include name="${ant.project.name}.jar" />
+				<include name="*.zip" />
+				<include name="*.xml" />
+			</zipfileset>
+			<zipfileset prefix="${ant.project.name}" dir="build" filemode="755">
+				<include name="extensionCreator" />
+			</zipfileset>
+		</zip>
+		<tar destfile="${dist.dir}/${ant.project.name}-snapshot-${DSTAMP}.tar.bz2" compression="bzip2">
+			<zipfileset src="${dist.dir}/${ant.project.name}-snapshot-${DSTAMP}.zip"/>
+		</tar>
+		
 		<zip destfile="${dist.dir}/${ant.project.name}-src-snapshot-${DSTAMP}.zip">
 			<fileset dir=".">
 				<include name="src/**/*.java" />

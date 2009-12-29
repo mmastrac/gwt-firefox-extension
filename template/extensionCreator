@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ "$1" == "" ]; then
+	echo Creates a template XPI skeleton for gwt-firefox-extension. 
+	echo
+	echo Usage: createXpi guid
+	echo
+	echo Example:
+	echo "	createXpi myextension@example.com"
+	exit
+fi
+
+ant createXpi -Dguid=$1
