@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-@Extension(guid = "97966663-9A3B-4DFA-83B1-E68F1DB5257F", name = "Example Extension")
+@Extension
 public class ExampleExtension extends ExtensionEntryPoint {
 	public ExampleExtension() {
 	}

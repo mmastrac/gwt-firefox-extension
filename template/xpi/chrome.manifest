@@ -1,0 +1,23 @@
+content     @moduleName                     jar:content.jar!/chrome/content/
+content     @moduleName                     jar:content.jar!/chrome/content/ contentaccessible=yes
+
+skin        @moduleName classic/1.0         jar:content.jar!/chrome/skin/classic/
+locale      @moduleName en-US               jar:content.jar!/chrome/locale/en-US/
+
+# Add style to toolbar customization for browser icon
+style       chrome://global/content/customizeToolbar.xul chrome://@moduleName/skin/style.css
+
+# Firefox
+overlay     chrome://browser/content/browser.xul chrome://@moduleName/content/overlay.xul
+
+# Thunderbird mail
+#overlay    chrome://messenger/content/messenger.xul chrome://@moduleName/content/overlay.xul
+
+# Thunderbird compose
+#overlay    chrome://messenger/content/messengercompose/messengercompose.xul chrome://@moduleName/content/overlay.xul
+
+# Thunderbird address book
+#overlay    chrome://messenger/content/addressbook/addressbook.xul chrome://@moduleName/content/overlay.xul
+
+# Sunbird
+#overlay    chrome://calendar/content/calendar.xul chrome://@moduleName/content/overlay.xul
