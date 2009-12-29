@@ -1,0 +1,29 @@
+<project name="gwt-firefox-extension-utility">
+	<target name="createXpi">
+		<property name="dest" value="." />
+		<property name="tmpDir" value="${dest}/tmp" />
+		
+		<fail unless="guid">guid property must be specified</fail>
+		
+		<echo>Creating template XPI for guid ${guid}</echo>
+		
+		<delete dir="${tmpDir}" failonerror="false" />
+		
+		<unzip src="template.zip" dest="${tmpDir}" overwrite="true">
+		</unzip>
+		
+		<copy todir="${dest}" overwrite="true">
+			<fileset dir="${tmpDir}">
+				<include name="xpi/**/*" />
+			</fileset>
+				
+			<filterchain>
+				<replacetokens>
+					<token key="GUID" value="${guid}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<delete dir="${tmpDir}" failonerror="false" />
+	</target>
+</project>

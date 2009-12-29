@@ -100,8 +100,6 @@ public class ExtensionLinker extends AbstractLinker {
 			throw new UnableToCompleteException();
 		}
 
-		boolean isHostedMode = compilationResults.size() == 0;
-
 		ByteArrayOutputStream contentZipBytes = getContentJarBytes(logger, context, uuid, xpiChromeDir, artifacts);
 
 		ByteArrayOutputStream extensionZipBytes = new ByteArrayOutputStream();
@@ -127,9 +125,9 @@ public class ExtensionLinker extends AbstractLinker {
 						continue;
 					}
 
-					recursiveAddXpiContentDir(extensionZipWriter, "", file);
+					recursiveAddXpiContentDir(context, uuid, extensionZipWriter, "", file);
 				} else if (file.isFile()) {
-					addFileToZip(extensionZipWriter, "", file);
+					addFileToZip(context, uuid, extensionZipWriter, "", file);
 				}
 			}
 
@@ -212,7 +210,7 @@ public class ExtensionLinker extends AbstractLinker {
 				zipWriter.closeEntry();
 			}
 
-			recursiveAddXpiContentDir(zipWriter, "chrome/", xpiChromeDir);
+			recursiveAddXpiContentDir(context, uuid, zipWriter, "chrome/", xpiChromeDir);
 
 			// Write the remaining resources under content/
 			for (EmittedArtifact artifact : artifacts.find(EmittedArtifact.class)) {
@@ -236,13 +234,18 @@ public class ExtensionLinker extends AbstractLinker {
 
 	private String readTemplatedClassResource(LinkerContext context, String filename, UUID uuid) {
 		InputStream resource = ExtensionLinker.class.getResourceAsStream(filename);
-		String script = Util.readStreamAsString(resource).replaceAll("@moduleName", context.getModuleName()).replaceAll("@guid",
-				uuid.toString());
+		String script = Util.readStreamAsString(resource);
+		script = replaceTemplate(context, uuid, script);
 
 		return script;
 	}
 
-	private void recursiveAddXpiContentDir(ZipOutputStream zipWriter, String prefix, File directory) throws IOException {
+	private String replaceTemplate(LinkerContext context, UUID uuid, String text) {
+		return text.replaceAll("@moduleName", context.getModuleName()).replaceAll("@guid", uuid.toString());
+	}
+
+	private void recursiveAddXpiContentDir(LinkerContext context, UUID uuid, ZipOutputStream zipWriter, String prefix, File directory)
+			throws IOException {
 		// TODO: Document this?
 		if (directory.getName().equals(".svn")) {
 			return;
@@ -250,19 +253,29 @@ public class ExtensionLinker extends AbstractLinker {
 
 		for (File file : directory.listFiles()) {
 			if (file.isDirectory()) {
-				recursiveAddXpiContentDir(zipWriter, prefix + file.getName() + "/", file);
+				recursiveAddXpiContentDir(context, uuid, zipWriter, prefix + file.getName() + "/", file);
 			} else if (file.isFile()) {
-				addFileToZip(zipWriter, prefix, file);
+				addFileToZip(context, uuid, zipWriter, prefix, file);
 			}
 		}
 	}
 
-	private void addFileToZip(ZipOutputStream zipWriter, String prefix, File file) throws IOException, FileNotFoundException {
-		zipWriter.putNextEntry(new ZipEntry(prefix + file.getName()));
+	private void addFileToZip(LinkerContext context, UUID uuid, ZipOutputStream zipWriter, String prefix, File file) throws IOException,
+			FileNotFoundException {
+		final String fullName = prefix + file.getName();
 
-		final FileInputStream input = new FileInputStream(file);
-		Util.copyNoClose(input, zipWriter);
-		input.close();
+		zipWriter.putNextEntry(new ZipEntry(fullName));
+
+		if (fullName.endsWith(".manifest") || fullName.endsWith(".rdf") || fullName.endsWith(".xul")) {
+			String contents = replaceTemplate(context, uuid, Util.readFileAsString(file));
+			zipWriter.write(contents.getBytes("UTF-8"));
+		} else {
+			final FileInputStream input = new FileInputStream(file);
+			Util.copyNoClose(input, zipWriter);
+			input.close();
+		}
+
+		System.out.println(fullName);
 
 		zipWriter.closeEntry();
 	}
