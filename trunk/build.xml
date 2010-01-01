@@ -134,13 +134,18 @@
 			<fileset dir="src">
 				<include name="**/*" />
 			</fileset>
+			
+			<!-- Pull in the pre-generated XPIDL bindings -->
+			<zipfileset src="xpidl/xpidl.jar">
+				<include name="**/*" />				
+			</zipfileset>
 		</jar>
 	</target>
 	
 	<target name="refresh-idl">
-		<untar compression="bzip2" dest="${output.dir}/idl" src="idl/idl.tar.bz2" />
+		<untar compression="bzip2" dest="${output.dir}/idl" src="xpidl/idl.tar.bz2" />
 		<copy todir="${output.dir}/idl" overwrite="true">
-			<fileset dir="idl">
+			<fileset dir="xpidl">
 				<include name="*.idl" />
 			</fileset>
 		</copy>
@@ -156,25 +161,36 @@
 		</pathconvert>
 
 		<mkdir dir="${output.dir}/idl_compiled/org/mozilla/xpconnect/gecko/" />
-		<exec command="../build/tools/xpidl/gwt.py -O ${output.dir}/idl_compiled/org/mozilla/xpconnect/gecko/ -I ${output.dir}/idl/ ${idl_files}">
+
+		<echo>Compiling IDL (stdout/stderr in xpidl.out/xpidl.err)</echo>
+		<exec executable="tools/xpidl/gwt.py" 
+			output="${output.dir}/xpidl.out" 
+			error="${output.dir}/xpidl.err" 
+			failonerror="true">
+			
+			<arg value="-O" />
+			<arg value="${output.dir}/idl_compiled/org/mozilla/xpconnect/gecko/" />
+			
+			<arg value="-I" />
+			<arg value="${output.dir}/idl/" />
+			
+			<arg line="${idl_files}" />
 		</exec>
 
+		<!-- Compile everything together, even though we're only going to keep the IDL bits -->
 		<javac destdir="${output.dir}/idl_compiled/">
 			<src path="${output.dir}/idl_compiled/" />
-			<src path="idl" />
+			<src path="src" />
 			<classpath>
-				<path refid="buildtime.classpath" />
-				<fileset refid="gwt.fileset" />
+				<fileset refid="gwt.user.jar" />
+				<fileset refid="gwt.dev.jar" />
 			</classpath>
 		</javac>
 
-		<jar destfile="idl/xpidl.jar">
+		<delete file="xpidl/xpidl.jar" />
+		<jar destfile="xpidl/xpidl.jar">
 			<fileset dir="${output.dir}/idl_compiled">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="idl">
-				<include name="**/*.java" />
-				<include name="**/*.xml" />
+				<include name="org/mozilla/xpconnect/gecko/**/*" />
 			</fileset>
 		</jar>
 
